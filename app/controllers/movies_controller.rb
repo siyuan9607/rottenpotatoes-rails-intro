@@ -11,19 +11,19 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+     @movies = Movie.order(params[:sort])
   end
-
+  
   def new
     # default: render 'new' template
   end
-
+  
   def create
     @movie = Movie.create!(movie_params)
     flash[:notice] = "#{@movie.title} was successfully created."
     redirect_to movies_path
   end
-
+  
   def edit
     @movie = Movie.find params[:id]
   end
@@ -41,5 +41,6 @@ class MoviesController < ApplicationController
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
   end
+  
 
 end
