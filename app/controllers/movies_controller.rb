@@ -12,12 +12,27 @@ class MoviesController < ApplicationController
 
   def index
      @all_ratings = Movie.rating
-     if(!(params[:ratings] == NIL))
-        rating_array = params[:ratings].keys
-        @movies = Movie.where(rating: rating_array).order(params[:sort])
-     else
-        @movies = Movie.order(params[:sort])
+     if(params[:ratings] != NIL)
+        session[:ratings] = params[:ratings]
      end
+     if(params[:sort] != NIL)
+        session[:sort] = params[:sort]
+     end
+      if(params[:id] != NIL)
+        session[:id] = params[:id]
+     end
+     
+     
+     if(!(session[:ratings] == NIL) && !(session[:sort] == NIL))
+        rating_array = session[:ratings].keys
+        @movies = Movie.where(rating: rating_array).order(session[:sort]) 
+     elsif(!(session[:sort] == NIL))
+        @movies = Movie.order(session[:sort])
+     else
+        @movies = Movie.all
+     end
+     
+     instance_variable_set("@#{session[:id]}_hilite", "hilite")
   end
   
   def new
