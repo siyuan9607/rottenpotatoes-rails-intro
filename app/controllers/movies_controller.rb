@@ -18,20 +18,23 @@ class MoviesController < ApplicationController
      if(params[:sort] != NIL)
         session[:sort] = params[:sort]
      end
-      if(params[:id] != NIL)
+     if(params[:id] != NIL)
         session[:id] = params[:id]
      end
      
-     
-     if(!(session[:ratings] == NIL) && !(session[:sort] == NIL))
-        rating_array = session[:ratings].keys
-        @movies = Movie.where(rating: rating_array).order(session[:sort]) 
-     elsif(!(session[:sort] == NIL))
-        @movies = Movie.order(session[:sort])
-     else
-        @movies = Movie.all
+     if(((params[:ratings] == NIL) && !(session[:ratings] == NIL) ) || (params[:sort] == NIL)  && !(session[:sort] == NIL))
+        redirect_to movies_path("ratings" => session[:ratings], "sort" => session[:sort])
+     else 
+       if(params[:ratings] != NIL && params[:sort] != NIL)
+         rating_array = params[:ratings].keys
+         @movies = Movie.where(rating: rating_array).order(params[:sort])
+       elsif(params[:sort] != NIL)
+         @movies = Movie.order(params[:sort])
+       else
+         @movies = Movie.all
+       end
      end
-     
+
      instance_variable_set("@#{session[:id]}_hilite", "hilite")
   end
   
