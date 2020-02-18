@@ -28,6 +28,8 @@ class MoviesController < ApplicationController
        if(params[:ratings] != NIL && params[:sort] != NIL)
          rating_array = params[:ratings].keys
          @movies = Movie.where(rating: rating_array).order(params[:sort])
+       elsif(params[:rating] != NIL)
+        @movies = Movie.where(rating: rating_array)
        elsif(params[:sort] != NIL)
          @movies = Movie.order(params[:sort])
        else
